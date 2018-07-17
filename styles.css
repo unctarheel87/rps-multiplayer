@@ -1,0 +1,41 @@
+#main {
+  width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+i {
+  margin: 10px;
+  opacity: 0.7;
+}
+
+i:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+div {
+  margin: 30px 0;
+}
+
+#player {
+  width: 300px;
+}
+
+#players {
+  display: flex;
+}
+
+form {
+  margin: 0 auto;
+}
+
+.card {
+  flex: 1;
+  margin: 20px;
+  height: 250px;
+}
+
+.is-turn {
+  border: 3px solid skyblue;
+}
