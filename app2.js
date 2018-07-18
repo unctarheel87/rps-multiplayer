@@ -55,6 +55,15 @@
                       <i data-name="paper" class="fas fa-hand-paper fa-3x hand"></i>
                       <i data-name="scissors" class="fas fa-hand-scissors fa-3x hand"></i>
                       `)
+    } else if ((snapshot.val().turn === 2)) {
+      const selections = $('<div>');
+      $('#player-one').append(selections).removeClass('is-turn');
+      $('#player-two').append(selections).addClass('is-turn');
+      selections.addClass('selections').html(`
+                      <i data-name="rock" class="fas fa-hand-rock fa-3x hand"></i>
+                      <i data-name="paper" class="fas fa-hand-paper fa-3x hand"></i>
+                      <i data-name="scissors" class="fas fa-hand-scissors fa-3x hand"></i>
+                      `)
     }
   });
 
@@ -69,7 +78,35 @@
     }
 });
 
-$(document).on('click', '.hand', function() {
+$(document).on('click', '#player-one .hand', function() {
   const choice = $(this).attr('data-name');
-  $('.selections').html(`<h2>${choice}</h2>`)
+  $('#player-one .selections').html(`<h2>${choice}</h2>`)
+  database.ref().update({turn: 2})
+  $('#player-two .selections').hide();
 })
+
+function chooseRPS() {
+  switch($(this).attr('data-name')) {
+    case 'rock':
+      playerChoice = 'rock'  
+      break;
+    case 'paper':
+      playerChoice = 'paper' 
+      break;
+    case 'scissors':
+      playerChoice = 'scissors' 
+      break;
+  }
+  return playerChoice 
+
+  //game logic
+  if(playerOneChoice === playerTwoChoice) {
+    $('#outcome').html(`<h2>Tie!</h2>`);
+  } else if ((playerOneChoice === 'rock' && playerTwoChoice === 'scissors') || +
+            (playerOneChoice === 'paper' && playerTwoChoice === 'rock') || +
+            (playerOneChoice === 'scissors' && oplayerTwoChoice === 'paper')) {
+    $('#outcome').html(`<h2>Player Wins!</h2>`);
+  } else {
+    $('#outcome').html(`<h2>Opponent Wins!</h2>`);
+  }
+}  
