@@ -49,6 +49,7 @@
   database.ref().on('value', function(snapshot) {
     if(snapshot.val().turn === 1) {
       const selections = $('<div>');
+      $('#player-two').append(selections).removeClass('is-turn');
       $('#player-one').append(selections).addClass('is-turn');
       selections.addClass('selections').html(`
                       <i data-name="rock" class="fas fa-hand-rock fa-3x hand"></i>
@@ -83,6 +84,13 @@ $(document).on('click', '#player-one .hand', function() {
   $('#player-one .selections').html(`<h2>${choice}</h2>`)
   database.ref().update({turn: 2})
   $('#player-two .selections').hide();
+})
+
+$(document).on('click', '#player-two .hand', function() {
+  const choice = $(this).attr('data-name');
+  $('#player-two .selections').html(`<h2>${choice}</h2>`)
+  database.ref().update({turn: 1})
+  $('#player-one .selections').hide();
 })
 
 function chooseRPS() {
