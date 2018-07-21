@@ -133,7 +133,7 @@ playersRef.on('value', function(snapshot) {
       
       if($('#chat-btn').prop('disabled') === false && !players.two) {
         const p = $('<p>');
-        $('#chat .card').append(p);
+        $('#chat .chat-body').append(p);
         p.text($('#player-two .player-name').data('name') + ' has disconnected.');
         setTimeout(function() {
           $('#chat .chat-body').empty();
@@ -151,7 +151,7 @@ playersRef.on('value', function(snapshot) {
 
 $(document).on('click', '#player-one .hand', function() {
   const choice = $(this).attr('data-name');
-  $('#player-one .selections').html(`<h2>${choice}</h2>`)
+  $('#player-one .selections').html(`<h2>${choice}</h2>`).hide().fadeIn();
   playerOneRef.update({choice})
   database.ref().update({turn: 2})
   $('#player-two .selections').hide();
@@ -159,7 +159,7 @@ $(document).on('click', '#player-one .hand', function() {
 
 $(document).on('click', '#player-two .hand', function() {
   const choice = $(this).attr('data-name');
-  $('#player-two .selections').html(`<h2>${choice}</h2>`)
+  $('#player-two .selections').html(`<h2>${choice}</h2>`).hide().fadeIn();
   playerTwoRef.update({choice})
   $('.selections').hide();
   playersRef.once('value', function(snapshot) {
@@ -180,17 +180,19 @@ winnerRef.on('value', function(snapshot) {
     return false;
   } else {
     const winner = snapshot.val();
-    $('#outcome').html(`<h1>${winner.winner} Wins!</h1>`);
+    const h1 = $('<h1>')
+    $('#outcome').addClass('yellow').append(h1);
+    h1.text(`${winner.winner} Wins!`).hide().fadeIn();
     if(winner.winner === 'Tie') {
-      $('#outcome').html(`<h1>${winner.winner}</h1>`);
+      h1.text(`${winner.winner}!`).hide().fadeIn();
     }
-    $('#player-one .body').html(`<h2>${winner.playerOneChoice}</h2>`);
-    $('#player-two .body').html(`<h2>${winner.playerTwoChoice}</h2>`);
+    $('#player-one .body').html(`<h2>${winner.playerOneChoice}</h2>`).hide().fadeIn();
+    $('#player-two .body').html(`<h2>${winner.playerTwoChoice}</h2>`).hide().fadeIn();
 
     setTimeout(function() {
       database.ref().update({turn: 1});
       $('#player-two .body').empty();
-      $('#outcome').empty();
+      $('#outcome').empty().removeClass('yellow');
       if($('#user').data('player') === 2) {
         $('.selections').hide();
       }
