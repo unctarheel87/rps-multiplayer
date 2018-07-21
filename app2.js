@@ -68,7 +68,8 @@
 
         setTimeout(function() {
           database.ref().update({turn: 1})
-        }, 2000); 
+        }, 2000);
+        $('#player .form-group').empty(); 
       }                        
       return players;
     });
@@ -151,15 +152,19 @@ playersRef.on('value', function(snapshot) {
         const p = $('<p>');
         $('#chat .chat-body').append(p);
         p.text($('#player-two .player-name').data('name') + ' has disconnected.');
+        $('#player-two').removeClass('is-turn');
+        $('.selections').hide();
+        $('#user h4').remove();
         setTimeout(function() {
           $('#chat .chat-body').empty();
-          $('#player-two').removeClass('is-turn');
-          $('#user h4').remove();
         }, 5000);
       } else if($('#chat-btn').prop('disabled') === false && !players.one) {
         const p = $('<p>');
         $('#chat .chat-body').append(p);
         p.text($('#player-one .player-name').data('name') + ' has disconnected.');
+        $('#player-one').removeClass('is-turn');
+        $('#user h4').remove();
+        $('.selections').hide();
         setTimeout(function() {
           $('#chat .chat-body').empty();
         }, 5000);
