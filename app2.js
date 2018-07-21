@@ -20,6 +20,7 @@
   
   let wins = 0;
   let losses = 0;
+  let games = 0;
   
   turnRef.onDisconnect().remove();
   messagesRef.onDisconnect().remove();
@@ -34,8 +35,8 @@
       if(!players) {
         players = { one: {name: userId,
                           wins: 0,
-                          losses: 0}
-                  }
+                          losses: 0},
+                   }
         //set disconnect listener
         playerOneRef.onDisconnect().remove();
   
@@ -53,11 +54,22 @@
         database.ref().update({turn: 1})
         $('#user').html(`<h3>Welcome ${userId}. You are Player 2.<h3>`).data({name: userId, player: 2}).append(`<h4>Waiting for ${players.one.name} to choose...</h4>`);
         $('#player .form-group').empty();
-        //hide player1 selections
-        $('.selections').hide();
         //set disconnect listener
         playerTwoRef.onDisconnect().remove();  
-      }            
+      } else if(players.hasOwnProperty('two')) {
+        players = { one: {name: userId,
+                          wins: 0,
+                          losses: 0},
+                   ...players }
+
+        $('#user').html(`<h3>Welcome ${userId}. You are Player 1.</h3>`).data({name: userId, player: 1});
+        //set disconnect listener
+        playerOneRef.onDisconnect().remove();
+
+        setTimeout(function() {
+          database.ref().update({turn: 1})
+        }, 2000); 
+      }                        
       return players;
     });
   });
@@ -79,11 +91,13 @@
         $('#player-one .body').empty();
         $('#player-one').addClass('is-turn');
         $('#player-one .body').append(selections);
+        if($('#user').data('player') === 1) {
         selections.addClass('selections').html(`
                         <i data-name="rock" class="fas fa-hand-rock fa-3x hand"></i>
                         <i data-name="paper" class="fas fa-hand-paper fa-3x hand"></i>
                         <i data-name="scissors" class="fas fa-hand-scissors fa-3x hand"></i>
-                        `)                
+                        `)
+        }                                
       } else if ((snapshot.val() === 2)) {
         const selections = $('<div>');
         $('#player-one').removeClass('is-turn');
@@ -96,11 +110,13 @@
         $('#player-two .body').empty();
         $('#player-two').addClass('is-turn')
         $('#player-two .body').append(selections);
+        if($('#user').data('player') === 2) {
         selections.addClass('selections').html(`
                         <i data-name="rock" class="fas fa-hand-rock fa-3x hand"></i>
                         <i data-name="paper" class="fas fa-hand-paper fa-3x hand"></i>
                         <i data-name="scissors" class="fas fa-hand-scissors fa-3x hand"></i>
                         `)
+        }                
       }
     }
   });
@@ -137,11 +153,13 @@ playersRef.on('value', function(snapshot) {
         p.text($('#player-two .player-name').data('name') + ' has disconnected.');
         setTimeout(function() {
           $('#chat .chat-body').empty();
+          $('#player-two').removeClass('is-turn');
+          $('#user h4').remove();
         }, 5000);
       } else if($('#chat-btn').prop('disabled') === false && !players.one) {
         const p = $('<p>');
         $('#chat .chat-body').append(p);
-        p.text($('#player-one .player-name').data('name')+ ' has disconnected.');
+        p.text($('#player-one .player-name').data('name') + ' has disconnected.');
         setTimeout(function() {
           $('#chat .chat-body').empty();
         }, 5000);
@@ -154,14 +172,12 @@ $(document).on('click', '#player-one .hand', function() {
   $('#player-one .selections').html(`<h2>${choice}</h2>`).hide().fadeIn();
   playerOneRef.update({choice})
   database.ref().update({turn: 2})
-  $('#player-two .selections').hide();
 });
 
 $(document).on('click', '#player-two .hand', function() {
   const choice = $(this).attr('data-name');
   $('#player-two .selections').html(`<h2>${choice}</h2>`).hide().fadeIn();
   playerTwoRef.update({choice})
-  $('.selections').hide();
   playersRef.once('value', function(snapshot) {
     if(!snapshot.val()) {
       return false;
@@ -188,11 +204,12 @@ winnerRef.on('value', function(snapshot) {
     }
     $('#player-one .body').html(`<h2>${winner.playerOneChoice}</h2>`).hide().fadeIn();
     $('#player-two .body').html(`<h2>${winner.playerTwoChoice}</h2>`).hide().fadeIn();
-
+    $('#remove-player').prop('disabled', true);
     setTimeout(function() {
       database.ref().update({turn: 1});
       $('#player-two .body').empty();
       $('#outcome').empty().removeClass('yellow');
+      $('#remove-player').prop('disabled', false);
       if($('#user').data('player') === 2) {
         $('.selections').hide();
       }
@@ -221,16 +238,17 @@ function chooseRPS(playerOneChoice, playerTwoChoice, playerOne, playerTwo) {
   //game logic
   wins++
   losses++
+  games++
   if(playerOneChoice === playerTwoChoice) {
-    winnerRef.set({winner: 'Tie', playerOneChoice, playerTwoChoice});
+    winnerRef.set({winner: 'Tie', playerOneChoice, playerTwoChoice, games});
   } else if ((playerOneChoice === 'rock' && playerTwoChoice === 'scissors') || +
             (playerOneChoice === 'paper' && playerTwoChoice === 'rock') || +
             (playerOneChoice === 'scissors' && playerTwoChoice === 'paper')) {
-    winnerRef.set({winner: playerOne, playerOneChoice, playerTwoChoice});
+    winnerRef.set({winner: playerOne, playerOneChoice, playerTwoChoice, games});
     playerOneRef.update({wins})
     playerTwoRef.update({losses})
   } else {
-    winnerRef.set({winner: playerTwo, playerOneChoice, playerTwoChoice});
+    winnerRef.set({winner: playerTwo, playerOneChoice, playerTwoChoice, games});
     playerOneRef.update({losses})
     playerTwoRef.update({wins})
   }
