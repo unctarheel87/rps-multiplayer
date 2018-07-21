@@ -9,6 +9,11 @@ i {
   opacity: 0.7;
 }
 
+.body {
+  margin: 0;
+  padding: 0;
+}
+
 i:hover {
   opacity: 1;
   cursor: pointer;
@@ -26,6 +31,17 @@ div {
   display: flex;
 }
 
+#player-one, #player-two {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+}
+
+.wins-losses {
+  display: flex;
+  justify-content: space-around;
+}
+
 form {
   margin: 0 auto;
 }
@@ -38,4 +54,25 @@ form {
 
 .is-turn {
   border: 3px solid skyblue;
+}
+
+#chat {
+  position: relative;
+  width: 500px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#chat-form input, #chat-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-right: none;
+  border-left: none;
+}
+
+#chat-form input:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: #ced4da;
 }

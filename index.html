@@ -17,25 +17,44 @@
     <div id="main">
       <h1>Rock, Paper, Scissors</h1>
       <div id="user">
-
+        <p class="turn"></p>
       </div>
-    <button id="reset">Reset</button>
     <form id="player">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" />
+        <input type="name" class="form-control" id="name" />
       </div>
-      <button type="submit" id="add-player" class="btn btn-primary">Play</button>
+      <button type="submit" id="add-player" class="btn btn-primary">Login</button>
+      <button type="submit" id="remove-player" class="btn btn-primary">Logout</button>
     </form>
     <section id="players">
       <div id="player-one" class="card">
-        <p>Waiting for Player</p>
+        <h3 class="player-name">Waiting for Player</h3>
+        <div class="body"></div>
+        <div class="wins-losses">
+          <p class="wins">Wins: 0</p>
+          <p class="losses">Losses: 0</p>
+        </div>
       </div>
-      <div class="card">
+      <div id="outcome" class="card">
     
       </div>
       <div id="player-two" class="card">
-          <p>Waiting for Player</p>
+        <h3 class="player-name">Waiting for Player</h3>
+        <div class="body"></div>
+        <div class="wins-losses">
+          <p class="wins">Wins: 0</p>
+          <p class="losses">Losses: 0</p>
+        </div>
+      </div>
+    </section>
+    <section id="chat">
+      <div class="card">
+        <form id="chat-form">
+          <div class="chat-body"></div>
+          <input type="text" id="chat-input" class="form-control" placeholder="type your message here..."/>
+          <button id="chat-btn" disabled class="btn btn-primary">Go</button>
+        </form>
       </div>
     </section>
     </div>
