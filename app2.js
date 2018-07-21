@@ -39,7 +39,8 @@
         //set disconnect listener
         playerOneRef.onDisconnect().remove();
   
-        $('#user').html(`${userId} <p>You are Player 1</p>`).data({name: userId, player: 1});
+        $('#user').html(`<h3>Welcome ${userId}. You are Player 1.</h3>`).data({name: userId, player: 1});
+        $('#player .form-group').empty();
       } else if (players.hasOwnProperty('one') && players.hasOwnProperty('two')) {
         $('#user').text('Sorry game is full...try again later.')
         return players
@@ -50,7 +51,8 @@
                     losses: 0}
                   }
         database.ref().update({turn: 1})
-        $('#user').html(`${userId} <p>You are Player 2</p>`).data({name: userId, player: 2});
+        $('#user').html(`<h3>Welcome ${userId}. You are Player 2.<h3>`).data({name: userId, player: 2}).append(`<h4>Waiting for ${players.one.name} to choose...</h4>`);
+        $('#player .form-group').empty();
         //hide player1 selections
         $('.selections').hide();
         //set disconnect listener
@@ -68,6 +70,12 @@
       if(snapshot.val() === 1) {
         const selections = $('<div>');
         $('#player-two').removeClass('is-turn');
+        $('#user h4').empty();
+        if($('#user').data('player') === 1) {
+          $('#user').append(`<h4>It's your turn.</h4>`)
+        } else {
+          $('#user').append(`<h4>Waiting for ${$('#player-one .player-name').data('name')} to choose...</h4>`)
+        }
         $('#player-one .body').empty();
         $('#player-one').addClass('is-turn');
         $('#player-one .body').append(selections);
@@ -79,6 +87,12 @@
       } else if ((snapshot.val() === 2)) {
         const selections = $('<div>');
         $('#player-one').removeClass('is-turn');
+        $('#user h4').empty();
+        if($('#user').data('player') === 2) {
+          $('#user').append(`<h4>It's your turn.</h4>`)
+        } else {
+          $('#user').append(`<h4>Waiting for ${$('#player-two .player-name').data('name')} to choose...</h4>`)
+        }
         $('#player-two .body').empty();
         $('#player-two').addClass('is-turn')
         $('#player-two .body').append(selections);
@@ -106,34 +120,32 @@ playersRef.on('value', function(snapshot) {
           $('#player-one .player-name').text(players[player].name).data({name:players[player].name});
           $('#player-one .wins').text("Wins: " + players[player].wins);
           $('#player-one .losses').text("Losses: " + players[player].losses);
-          
-          if($('#chat-btn').prop('disabled') === false) {
-            const p = $('<p>');
-            $('#chat .card').append(p);
-            p.text($('#player-two .player-name').data('name') + ' has disconnected.');
-            setTimeout(function() {
-              $('#chat .chat-body').empty();
-            }, 5000);
-          }
         } else {
           const p = $('<h2>')
           $('#player-two .player-name').text(players[player].name).data({name:players[player].name});
           $('#player-two .wins').text("Wins: " + players[player].wins);
           $('#player-two .losses').text("Losses: " + players[player].losses);
-
-          if($('#chat-btn').prop('disabled') === false) {
-            const p = $('<p>');
-            $('#chat .chat-body').append(p);
-            p.text($('#player-one .player-name').data('name')+ ' has disconnected.');
-            setTimeout(function() {
-              $('#chat .card').empty();
-            }, 5000);
-          }
         }
       }
       if(players.one && players.two) {
         $('#chat-btn').prop('disabled', false);
-      } 
+      }
+      
+      if($('#chat-btn').prop('disabled') === false && !players.two) {
+        const p = $('<p>');
+        $('#chat .card').append(p);
+        p.text($('#player-two .player-name').data('name') + ' has disconnected.');
+        setTimeout(function() {
+          $('#chat .chat-body').empty();
+        }, 5000);
+      } else if($('#chat-btn').prop('disabled') === false && !players.one) {
+        const p = $('<p>');
+        $('#chat .chat-body').append(p);
+        p.text($('#player-one .player-name').data('name')+ ' has disconnected.');
+        setTimeout(function() {
+          $('#chat .chat-body').empty();
+        }, 5000);
+      }
     }
 }); 
 
