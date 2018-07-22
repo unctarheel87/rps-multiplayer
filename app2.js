@@ -125,11 +125,11 @@
 //display players and enable chat
 playersRef.on('value', function(snapshot) {
     if(!snapshot.val()) {
-      return false;
-    } else {
       $('.player-name').text('Waiting for Player');
       $('#player-one .wins').text("Wins: 0");
       $('#player-one .losses').text("Losses: 0");
+      return false;
+    } else {
       const players = snapshot.val();
       for(let player in players) {
         if(player === 'one') {
@@ -148,11 +148,14 @@ playersRef.on('value', function(snapshot) {
         $('#chat-btn').prop('disabled', false);
       }
       
+      //disconnect logic
       if($('#chat-btn').prop('disabled') === false && !players.two) {
         const p = $('<p>');
         $('#chat .chat-body').append(p);
         p.text($('#player-two .player-name').data('name') + ' has disconnected.');
         $('#player-two').removeClass('is-turn');
+        $('#player-one').removeClass('is-turn');
+        $('#player-two .player-name').text('Waiting for Player');
         $('.selections').hide();
         $('#user h4').remove();
         setTimeout(function() {
@@ -163,6 +166,8 @@ playersRef.on('value', function(snapshot) {
         $('#chat .chat-body').append(p);
         p.text($('#player-one .player-name').data('name') + ' has disconnected.');
         $('#player-one').removeClass('is-turn');
+        $('#player-two').removeClass('is-turn');
+        $('#player-one .player-name').text('Waiting for Player');
         $('#user h4').remove();
         $('.selections').hide();
         setTimeout(function() {
