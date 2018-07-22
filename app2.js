@@ -160,6 +160,7 @@ playersRef.on('value', function(snapshot) {
         $('#user h4').remove();
         setTimeout(function() {
           $('#chat .chat-body').empty();
+          $('#chat-btn').prop('disabled', true);
         }, 5000);
       } else if($('#chat-btn').prop('disabled') === false && !players.one) {
         const p = $('<p>');
@@ -172,6 +173,7 @@ playersRef.on('value', function(snapshot) {
         $('.selections').hide();
         setTimeout(function() {
           $('#chat .chat-body').empty();
+          $('#chat-btn').prop('disabled', true);
         }, 5000);
       }
     }
