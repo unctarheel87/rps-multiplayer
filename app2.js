@@ -234,7 +234,7 @@ $('#chat-btn').on('click', addMsg)
 
 messagesRef.on('child_added', function(snapshot) {
   const p = $('<p>');
-  $('#chat .chat-body').prepend(p);
+  $('#chat .chat-body').append(p);
   p.text(snapshot.val().name + ': ' + snapshot.val().msg)
 });
 
