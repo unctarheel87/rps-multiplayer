@@ -259,13 +259,13 @@ function chooseRPS(playerOneChoice, playerTwoChoice, playerOne, playerTwo) {
     winnerRef.set({winner: playerOne, playerOneChoice, playerTwoChoice, games});
     player1wins++
     player2losses++
-    playerOneRef.update({wins})
-    playerTwoRef.update({losses})
+    playerOneRef.update({wins: player1wins})
+    playerTwoRef.update({losses: player2losses})
   } else {
     winnerRef.set({winner: playerTwo, playerOneChoice, playerTwoChoice, games});
     player2wins++
     player1losses++
-    playerOneRef.update({losses})
-    playerTwoRef.update({wins})
+    playerOneRef.update({losses: player1losses})
+    playerTwoRef.update({wins: player2wins})
   }
 }  
