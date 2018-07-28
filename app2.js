@@ -18,8 +18,10 @@
   const turnRef = database.ref('/turn');
   const messagesRef = database.ref('/messages');
   
-  let wins = 0;
-  let losses = 0;
+  let player1wins = 0;
+  let player1losses = 0;
+  let player2wins = 0;
+  let player2losses = 0;
   let games = 0;
   
   turnRef.onDisconnect().remove();
@@ -255,14 +257,14 @@ function chooseRPS(playerOneChoice, playerTwoChoice, playerOne, playerTwo) {
             (playerOneChoice === 'paper' && playerTwoChoice === 'rock') || +
             (playerOneChoice === 'scissors' && playerTwoChoice === 'paper')) {
     winnerRef.set({winner: playerOne, playerOneChoice, playerTwoChoice, games});
-    wins++
-    losses++
+    player1wins++
+    player2losses++
     playerOneRef.update({wins})
     playerTwoRef.update({losses})
   } else {
     winnerRef.set({winner: playerTwo, playerOneChoice, playerTwoChoice, games});
-    wins++
-    losses++
+    player2wins++
+    player1losses++
     playerOneRef.update({losses})
     playerTwoRef.update({wins})
   }
