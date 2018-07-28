@@ -255,13 +255,13 @@ function chooseRPS(playerOneChoice, playerTwoChoice, playerOne, playerTwo) {
             (playerOneChoice === 'paper' && playerTwoChoice === 'rock') || +
             (playerOneChoice === 'scissors' && playerTwoChoice === 'paper')) {
     winnerRef.set({winner: playerOne, playerOneChoice, playerTwoChoice, games});
-     wins++
+    wins++
     losses++
     playerOneRef.update({wins})
     playerTwoRef.update({losses})
   } else {
     winnerRef.set({winner: playerTwo, playerOneChoice, playerTwoChoice, games});
-     wins++
+    wins++
     losses++
     playerOneRef.update({losses})
     playerTwoRef.update({wins})
