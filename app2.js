@@ -248,8 +248,6 @@ function addMsg(e) {
 //rps function
 function chooseRPS(playerOneChoice, playerTwoChoice, playerOne, playerTwo) {
   //game logic
-  wins++
-  losses++
   games++
   if(playerOneChoice === playerTwoChoice) {
     winnerRef.set({winner: 'Tie', playerOneChoice, playerTwoChoice, games});
@@ -257,10 +255,14 @@ function chooseRPS(playerOneChoice, playerTwoChoice, playerOne, playerTwo) {
             (playerOneChoice === 'paper' && playerTwoChoice === 'rock') || +
             (playerOneChoice === 'scissors' && playerTwoChoice === 'paper')) {
     winnerRef.set({winner: playerOne, playerOneChoice, playerTwoChoice, games});
+     wins++
+    losses++
     playerOneRef.update({wins})
     playerTwoRef.update({losses})
   } else {
     winnerRef.set({winner: playerTwo, playerOneChoice, playerTwoChoice, games});
+     wins++
+    losses++
     playerOneRef.update({losses})
     playerTwoRef.update({wins})
   }
